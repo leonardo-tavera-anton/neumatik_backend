@@ -15,6 +15,7 @@ app.get("/", (req, res) => {
   res.send(`
     <h1>Backen neumatik</h1>
     <h3>Rutas disponibles:</h3>
+    Espero loli exponga no lea esto
     <ul>
       <li><a href="/usuarios">/usuarios</a></li>
       <li><a href="/vehiculos">/vehiculos</a></li>
@@ -26,7 +27,7 @@ app.get("/", (req, res) => {
       <li><a href="/mensajes_chat">/mensajes_chat</a></li>
       <li><a href="/favoritos">/favoritos</a></li>
     </ul>
-    <p>Haz click en cualquier enlace para ver los datos de la tabla.</p>
+    <p>Hagam click en cualquier enlace para ver los datos por tabla</p>
   `);
 });
 
