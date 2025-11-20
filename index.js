@@ -13,7 +13,7 @@ app.use(express.json());
 // ------------------------
 app.get("/", (req, res) => {
   res.send(`
-    <h1>Backen neumatik</h1>
+    <h1>Backen Neumatik</h1>
     <h3>Rutas disponibles:</h3>
     Espero loli exponga no lea esto
     <ul>
