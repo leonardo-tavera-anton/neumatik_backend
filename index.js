@@ -1,44 +1,65 @@
 import express from "express";
 import pool from "./db.js";
 import dotenv from "dotenv";
-
 dotenv.config();
-const app = express();
-app.use(express.json());
 
+const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Endpoint de prueba de menú
-app.get("/", async (req, res) => {
-  try {
-    // Consultas simples a todas las tablas
-    const usuarios = await pool.query("SELECT * FROM usuarios");
-    const vehiculos = await pool.query("SELECT * FROM vehiculos");
-    const publicaciones = await pool.query("SELECT * FROM publicaciones");
-    const fotos = await pool.query("SELECT * FROM fotos");
-    const datos_obd = await pool.query("SELECT * FROM datos_obd");
-    const informes_ia = await pool.query("SELECT * FROM informes_ia");
-    const chats = await pool.query("SELECT * FROM chats");
-    const mensajes_chat = await pool.query("SELECT * FROM mensajes_chat");
-    const favoritos = await pool.query("SELECT * FROM favoritos");
+app.use(express.json());
 
-    res.json({
-      usuarios: usuarios.rows,
-      vehiculos: vehiculos.rows,
-      publicaciones: publicaciones.rows,
-      fotos: fotos.rows,
-      datos_obd: datos_obd.rows,
-      informes_ia: informes_ia.rows,
-      chats: chats.rows,
-      mensajes_chat: mensajes_chat.rows,
-      favoritos: favoritos.rows
-    });
-  } catch (err) {
-    console.error("Error al obtener datos:", err);
-    res.status(500).json({ error: "Error al obtener datos" });
-  }
+// ------------------------
+// MENÚ INICIO
+// ------------------------
+app.get("/", (req, res) => {
+  res.send(`
+    <h1>Backen neumatik</h1>
+    <h3>Rutas disponibles:</h3>
+    <ul>
+      <li><a href="/usuarios">/usuarios</a></li>
+      <li><a href="/vehiculos">/vehiculos</a></li>
+      <li><a href="/publicaciones">/publicaciones</a></li>
+      <li><a href="/fotos">/fotos</a></li>
+      <li><a href="/datos_obd">/datos_obd</a></li>
+      <li><a href="/informes_ia">/informes_ia</a></li>
+      <li><a href="/chats">/chats</a></li>
+      <li><a href="/mensajes_chat">/mensajes_chat</a></li>
+      <li><a href="/favoritos">/favoritos</a></li>
+    </ul>
+    <p>Haz click en cualquier enlace para ver los datos de la tabla.</p>
+  `);
 });
 
+// ------------------------
+// RUTAS DE TABLAS
+// ------------------------
+const tablas = [
+  "usuarios",
+  "vehiculos",
+  "publicaciones",
+  "fotos",
+  "datos_obd",
+  "informes_ia",
+  "chats",
+  "mensajes_chat",
+  "favoritos"
+];
+
+tablas.forEach(tabla => {
+  app.get(`/${tabla}`, async (req, res) => {
+    try {
+      const result = await pool.query(`SELECT * FROM ${tabla}`);
+      res.json(result.rows);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: `Error al obtener ${tabla}` });
+    }
+  });
+});
+
+// ------------------------
+// INICIAR SERVIDOR
+// ------------------------
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
 });
